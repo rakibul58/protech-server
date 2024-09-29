@@ -13,6 +13,8 @@ export interface IUser {
   address?: string;
   isDeleted: boolean;
   preferences?: string;
+  isVerified?: boolean;
+
   passwordChangedAt?: Date;
 }
 

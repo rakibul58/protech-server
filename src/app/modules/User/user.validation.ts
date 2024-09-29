@@ -86,5 +86,5 @@ export const UserValidations = {
   signinValidationSchema,
   refreshTokenValidationSchema,
   profileUpdateValidation,
-  updateUserValidation
+  updateUserValidation,
 };

@@ -91,7 +91,7 @@ const getSingleUser = catchAsync(async (req, res) => {
 });
 
 const updateUser = catchAsync(async (req, res) => {
-  const result = await AuthServices.updateUserFromDB(req.params.id , req.body);
+  const result = await AuthServices.updateUserFromDB(req.params.id, req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -109,5 +109,5 @@ export const AuthControllers = {
   updateProfileData,
   getAllUsers,
   getSingleUser,
-  updateUser
+  updateUser,
 };

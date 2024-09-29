@@ -8,7 +8,9 @@ const createBookingValidationSchema = z.object({
     startTime: z.string({ required_error: 'Start time is required!' }),
     additionalFeatures: z.object({}),
     nidOrPassport: z.string({ required_error: 'Nid/Password is required!' }),
-    drivingLicense: z.string({ required_error: 'Driving License is required!' }),
+    drivingLicense: z.string({
+      required_error: 'Driving License is required!',
+    }),
   }),
 });
 

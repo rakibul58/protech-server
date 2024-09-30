@@ -10,7 +10,7 @@ const app: Application = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: ['http://localhost:5173', 'https://steer-away-rental.vercel.app'],
+    origin: ['http://localhost:3000'],
     credentials: true,
   }),
 );
@@ -20,7 +20,7 @@ app.use(cookieParser());
 app.use(`/api/v1`, router);
 
 app.get('/', (req: Request, res: Response) => {
-  res.send('SteerAway server is running!');
+  res.send('ProTech server is running!');
 });
 
 // middlewares

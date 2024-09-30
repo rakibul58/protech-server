@@ -5,11 +5,50 @@ import { User } from '../User/user.model';
 import config from '../../config';
 import { createToken, verifyToken } from './auth.utils';
 import { JwtPayload } from 'jsonwebtoken';
+import { USER_ROLE } from '../User/user.constant';
 
 const registerUserIntoDB = async (payload: IUser) => {
   const user = await User.isUserExistsByEmail(payload.email);
   // if there is no password field then adding a default password
   payload.password = payload.password || config.default_password;
+  if (user) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'This email is already registered!',
+    );
+  }
+
+  await User.create(payload);
+  
+  const jwtPayload = {
+    email: payload.email,
+    role: USER_ROLE.user,
+  };
+
+  // creating token
+  const accessToken = createToken(
+    jwtPayload as { role: string; email: string },
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as string,
+  );
+
+  const refreshToken = createToken(
+    jwtPayload as { role: string; email: string },
+    config.jwt_refresh_secret as string,
+    config.jwt_refresh_expires_in as string,
+  );
+
+  return {
+    accessToken,
+    refreshToken,
+  };
+};
+
+const createAdminIntoDB = async (payload: IUser) => {
+  const user = await User.isUserExistsByEmail(payload.email);
+  // if there is no password field then adding a default password
+  payload.password = payload.password || config.default_password;
+  payload.role = USER_ROLE.admin;
   if (user) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
@@ -167,4 +206,5 @@ export const AuthServices = {
   getAllUsersFromDB,
   getSingleUserFromDB,
   updateUserFromDB,
+  createAdminIntoDB,
 };

@@ -8,19 +8,34 @@ const userRegisterValidationSchema = z.object({
       .string({ required_error: 'Email is required!' })
       .trim()
       .email({ message: 'Please enter a valid email' }),
-    role: z
-      .enum(['admin', 'user'], {
-        invalid_type_error: 'Enter a valid role',
-      })
-      .optional()
-      .default('user'),
     password: z
-      .string()
+      .string({ required_error: 'Password is required!' })
+      .max(20, "Password can't be more than 20 characters!"),
+    phone: z.string().optional().nullable().default(null),
+    preferences: z.string().optional().nullable().default(null),
+    address: z.string().optional().nullable().default(null),
+    isVerified: z.boolean().optional().default(false), // New field
+  }),
+});
+
+//createAdminValidationSchema
+const createAdminValidationSchema = z.object({
+  body: z.object({
+    name: z.string({ required_error: 'Name is required!' }).trim(),
+    email: z
+      .string({ required_error: 'Email is required!' })
+      .trim()
+      .email({ message: 'Please enter a valid email' }),
+    password: z
+      .string({ required_error: 'Password is required!' })
       .max(20, "Password can't be more than 20 characters!")
       .optional(),
     phone: z.string().optional().nullable().default(null),
     preferences: z.string().optional().nullable().default(null),
     address: z.string().optional().nullable().default(null),
+    isVerified: z.boolean().optional().default(true), // New field
+    isDeleted: z.boolean().optional().default(false), // Admins might want to mark users as deleted
+    followedProfiles: z.array(z.string()).optional(), // Optional field for profiles they follow
   }),
 });
 
@@ -42,6 +57,9 @@ const updateUserValidation = z.object({
     phone: z.string().optional().nullable().default(null),
     address: z.string().optional().nullable().default(null),
     preferences: z.string().optional().nullable().default(null),
+    isDeleted: z.boolean().optional(), // New field
+    isVerified: z.boolean().optional(), // New field
+    followedProfiles: z.array(z.string()).optional(), // New field (assuming ObjectId as string)
   }),
 });
 
@@ -87,4 +105,5 @@ export const UserValidations = {
   refreshTokenValidationSchema,
   profileUpdateValidation,
   updateUserValidation,
+  createAdminValidationSchema,
 };

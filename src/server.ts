@@ -9,7 +9,7 @@ async function main() {
   try {
     await mongoose.connect(config.database_url as string);
     server = app.listen(config.port, () => {
-      console.log(`SteerAway app listening on ports ${config.port}`);
+      console.log(`ProTech app listening on ports ${config.port}`);
     });
   } catch (error) {
     console.log(error);

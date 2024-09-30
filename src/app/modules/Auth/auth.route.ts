@@ -12,6 +12,12 @@ router.route('/signup').post(
   AuthControllers.signupUser,
 );
 
+router.route('/create-admin').post(
+  auth(USER_ROLE.admin),
+  validateRequest(UserValidations.createAdminValidationSchema), // validating schema
+  AuthControllers.signupUser,
+);
+
 router
   .route('/signin')
   .post(
@@ -30,6 +36,7 @@ router
   .get(auth(USER_ROLE.user, USER_ROLE.admin), AuthControllers.getProfileData)
   .put(
     auth(USER_ROLE.user, USER_ROLE.admin),
+    validateRequest(UserValidations.profileUpdateValidation),
     AuthControllers.updateProfileData,
   );
 
@@ -37,8 +44,8 @@ router
   .route('/users/:id')
   .get(auth(USER_ROLE.admin), AuthControllers.getSingleUser)
   .put(
-    validateRequest(UserValidations.updateUserValidation),
     auth(USER_ROLE.admin),
+    validateRequest(UserValidations.updateUserValidation),
     AuthControllers.updateUser,
   );
 

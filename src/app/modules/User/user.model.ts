@@ -19,7 +19,7 @@ const userSchema = new Schema<IUser, UserModel>(
     },
     password: {
       type: String,
-      select: 0,
+      select: 0, // To match the 'optional' nature of the interface
     },
     role: {
       type: String,
@@ -45,6 +45,16 @@ const userSchema = new Schema<IUser, UserModel>(
       type: Boolean,
       default: false,
     },
+    isVerified: {
+      type: Boolean,
+      default: false, // New field added
+    },
+    followedProfiles: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Profile', // Assuming 'Profile' is the related collection
+      },
+    ],
   },
   {
     timestamps: true,

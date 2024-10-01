@@ -49,12 +49,10 @@ const userSchema = new Schema<IUser, UserModel>(
       type: Boolean,
       default: false, // New field added
     },
-    followedProfiles: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Profile', // Assuming 'Profile' is the related collection
-      },
-    ],
+    isBlocked: {
+      type: Boolean,
+      default: false, // New field added
+    },
   },
   {
     timestamps: true,

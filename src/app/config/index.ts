@@ -17,4 +17,8 @@ export default {
   base_url: process.env.BASE_URL,
   store_id: process.env.STORE_ID,
   signature_key: process.env.SIGNATURE_KEY,
+  sender_email: process.env.SENDER_EMAIL,
+  sender_password: process.env.SENDER_APP_PASS,
+  reset_pass_ui_link: 'http://localhost:3000',
+  // reset_pass_ui_link: process.env.RESET_PASS_UI_LINK,
 };

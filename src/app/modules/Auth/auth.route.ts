@@ -51,4 +51,16 @@ router
 
 router.route('/users').get(auth(USER_ROLE.admin), AuthControllers.getAllUsers);
 
+router.post(
+  '/forget-password',
+  validateRequest(UserValidations.forgetPasswordValidationSchema),
+  AuthControllers.forgetPassword,
+);
+
+router.post(
+  '/reset-password',
+  validateRequest(UserValidations.resetPasswordValidationSchema),
+  AuthControllers.resetPassword,
+);
+
 export const AuthRoutes = router;

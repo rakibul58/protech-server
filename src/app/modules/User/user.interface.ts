@@ -1,4 +1,4 @@
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { USER_ROLE } from './user.constant';
 
 /* eslint-disable no-unused-vars */
@@ -14,7 +14,7 @@ export interface IUser {
   isDeleted: boolean;
   preferences?: string;
   isVerified?: boolean;
-  followedProfiles?: Types.ObjectId[];
+  isBlocked?: boolean;
   passwordChangedAt?: Date;
 }
 

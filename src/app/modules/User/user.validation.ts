@@ -35,6 +35,7 @@ const createAdminValidationSchema = z.object({
     address: z.string().optional().nullable().default(null),
     isVerified: z.boolean().optional().default(true), // New field
     isDeleted: z.boolean().optional().default(false), // Admins might want to mark users as deleted
+    isBlocked: z.boolean().optional().default(false), // Admins might want to mark users as deleted
     followedProfiles: z.array(z.string()).optional(), // Optional field for profiles they follow
   }),
 });
@@ -98,6 +99,25 @@ const refreshTokenValidationSchema = z.object({
   }),
 });
 
+const forgetPasswordValidationSchema = z.object({
+  body: z.object({
+    email: z.string({
+      required_error: 'Email is required!',
+    }),
+  }),
+});
+
+const resetPasswordValidationSchema = z.object({
+  body: z.object({
+    email: z.string({
+      required_error: 'Email is required!',
+    }),
+    newPassword: z.string({
+      required_error: 'User password is required!',
+    }),
+  }),
+});
+
 // exporting the schema
 export const UserValidations = {
   userRegisterValidationSchema,
@@ -106,4 +126,6 @@ export const UserValidations = {
   profileUpdateValidation,
   updateUserValidation,
   createAdminValidationSchema,
+  forgetPasswordValidationSchema,
+  resetPasswordValidationSchema,
 };

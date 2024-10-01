@@ -2,6 +2,7 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { AuthServices } from './auth.service';
+import AppError from '../../errors/AppError';
 
 // auth controllers
 const signupUser = catchAsync(async (req, res) => {
@@ -117,6 +118,33 @@ const updateUser = catchAsync(async (req, res) => {
   });
 });
 
+const forgetPassword = catchAsync(async (req, res) => {
+  const email = req.body.email;
+  const result = await AuthServices.forgetPassword(email);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Reset link is generated successfully!',
+    data: result,
+  });
+});
+
+const resetPassword = catchAsync(async (req, res) => {
+  const token = req.headers.authorization;
+
+  if (!token) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Something went wrong!');
+  }
+
+  const result = await AuthServices.resetPassword(req.body, token);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Password reset successfully!',
+    data: result,
+  });
+});
+
 export const AuthControllers = {
   signupUser,
   signInUser,
@@ -127,4 +155,6 @@ export const AuthControllers = {
   getSingleUser,
   updateUser,
   createAdmin,
+  forgetPassword,
+  resetPassword,
 };

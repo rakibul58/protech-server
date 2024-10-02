@@ -249,7 +249,8 @@ const forgetPassword = async (email: string) => {
 
   const resetUILink = `${config.reset_pass_ui_link}/set-password?email=${userData.email}&token=${resetToken} `;
 
-  sendEmail(userData.email, resetUILink);
+  const result = sendEmail(userData.email, resetUILink);
+  return result;
 };
 
 const resetPassword = async (
@@ -304,7 +305,6 @@ const resetPassword = async (
     },
     {
       password: newHashedPassword,
-      needsPasswordChange: false,
       passwordChangedAt: new Date(),
     },
   );

@@ -19,6 +19,6 @@ export default {
   signature_key: process.env.SIGNATURE_KEY,
   sender_email: process.env.SENDER_EMAIL,
   sender_password: process.env.SENDER_APP_PASS,
-  reset_pass_ui_link: 'http://localhost:3000',
-  // reset_pass_ui_link: process.env.RESET_PASS_UI_LINK,
+  // reset_pass_ui_link: 'http://localhost:3000',
+  reset_pass_ui_link: process.env.RESET_PASS_UI_LINK,
 };

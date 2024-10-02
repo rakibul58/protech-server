@@ -53,6 +53,23 @@ const userSchema = new Schema<IUser, UserModel>(
       type: Boolean,
       default: false, // New field added
     },
+    profileImg: {
+      type: String,
+      default:
+        'https://res.cloudinary.com/dk4zufod5/image/upload/v1727861738/blank-profile-picture-973460_960_720_bb7bsv.webp',
+    },
+    followers: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
+    following: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   {
     timestamps: true,

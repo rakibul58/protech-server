@@ -1,10 +1,11 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { USER_ROLE } from './user.constant';
 
 /* eslint-disable no-unused-vars */
 
 // User Interface
 export interface IUser {
+  _id?: Types.ObjectId;
   name: string;
   email: string;
   role?: 'admin' | 'user';
@@ -16,6 +17,9 @@ export interface IUser {
   isVerified?: boolean;
   isBlocked?: boolean;
   passwordChangedAt?: Date;
+  profileImg?: string;
+  followers?: Types.ObjectId[];
+  following?: Types.ObjectId[];
 }
 
 // User Static Model

@@ -8,6 +8,7 @@ import { createToken, verifyToken } from './auth.utils';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { USER_ROLE } from '../User/user.constant';
 import { sendEmail } from '../../utils/sendEmail';
+import { Types } from 'mongoose';
 
 const registerUserIntoDB = async (payload: IUser) => {
   const user = await User.isUserExistsByEmail(payload.email);
@@ -20,22 +21,34 @@ const registerUserIntoDB = async (payload: IUser) => {
     );
   }
 
-  await User.create(payload);
+  const userData = await User.create(payload);
 
   const jwtPayload = {
+    _id: userData._id,
     email: payload.email,
     role: USER_ROLE.user,
+    profileImg: userData.profileImg,
   };
 
   // creating token
   const accessToken = createToken(
-    jwtPayload as { role: string; email: string },
+    jwtPayload as {
+      _id: Types.ObjectId;
+      role: string;
+      email: string;
+      profileImg: string;
+    },
     config.jwt_access_secret as string,
     config.jwt_access_expires_in as string,
   );
 
   const refreshToken = createToken(
-    jwtPayload as { role: string; email: string },
+    jwtPayload as {
+      _id: Types.ObjectId;
+      role: string;
+      email: string;
+      profileImg: string;
+    },
     config.jwt_refresh_secret as string,
     config.jwt_refresh_expires_in as string,
   );
@@ -75,19 +88,31 @@ const signInUserFromDB = async (payload: ISignInUser) => {
     throw new AppError(httpStatus.FORBIDDEN, 'Password do not matched');
 
   const jwtPayload = {
+    _id: user._id,
     email: user.email,
     role: user.role,
+    profileImg: user.profileImg,
   };
 
   // creating token
   const accessToken = createToken(
-    jwtPayload as { role: string; email: string },
+    jwtPayload as {
+      _id: Types.ObjectId;
+      role: string;
+      email: string;
+      profileImg: string;
+    },
     config.jwt_access_secret as string,
     config.jwt_access_expires_in as string,
   );
 
   const refreshToken = createToken(
-    jwtPayload as { role: string; email: string },
+    jwtPayload as {
+      _id: Types.ObjectId;
+      role: string;
+      email: string;
+      profileImg: string;
+    },
     config.jwt_refresh_secret as string,
     config.jwt_refresh_expires_in as string,
   );
@@ -132,12 +157,19 @@ const refreshToken = async (token: string) => {
   }
 
   const jwtPayload = {
+    _id: user._id,
     email: user.email,
     role: user.role,
+    profileImg: user.profileImg,
   };
 
   const accessToken = createToken(
-    jwtPayload as { role: string; email: string },
+    jwtPayload as {
+      _id: Types.ObjectId;
+      role: string;
+      email: string;
+      profileImg: string;
+    },
     config.jwt_access_secret as string,
     config.jwt_access_expires_in as string,
   );
@@ -237,12 +269,19 @@ const forgetPassword = async (email: string) => {
   }
 
   const jwtPayload = {
+    _id: userData._id,
     email: userData.email,
     role: userData.role,
+    profileImg: userData.profileImg,
   };
 
   const resetToken = createToken(
-    jwtPayload as { role: string; email: string },
+    jwtPayload as {
+      _id: Types.ObjectId;
+      role: string;
+      email: string;
+      profileImg: string;
+    },
     config.jwt_access_secret as string,
     '10m',
   );

@@ -15,7 +15,6 @@ const getAllPostFromDB = async (query: Record<string, unknown>) => {
     .search(['content' , 'categories'])
     .filter()
     .sort()
-    .priceRange()
     .paginate()
     .fields();
 

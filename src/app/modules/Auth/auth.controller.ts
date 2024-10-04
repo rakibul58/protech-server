@@ -145,6 +145,39 @@ const resetPassword = catchAsync(async (req, res) => {
   });
 });
 
+const getRecommendProfiles = catchAsync(async (req, res) => {
+  const result = await AuthServices.getRecommendProfilesFromDB(req.user , req.query);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Recommended users Fetched successfully!',
+    data: result,
+  });
+});
+
+const getFollowingProfiles = catchAsync(async (req, res) => {
+  const result = await AuthServices.getFollowingProfilesFromDB(req.user , req.query);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Following users Fetched successfully!',
+    data: result,
+  });
+});
+
+const getFollowersProfiles = catchAsync(async (req, res) => {
+  const result = await AuthServices.getFollowersProfilesFromDB(req.user , req.query);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Followers profiles Fetched successfully!',
+    data: result,
+  });
+});
+
 export const AuthControllers = {
   signupUser,
   signInUser,
@@ -157,4 +190,7 @@ export const AuthControllers = {
   createAdmin,
   forgetPassword,
   resetPassword,
+  getRecommendProfiles,
+  getFollowingProfiles,
+  getFollowersProfiles
 };

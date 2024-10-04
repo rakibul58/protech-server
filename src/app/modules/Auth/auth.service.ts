@@ -9,6 +9,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { USER_ROLE } from '../User/user.constant';
 import { sendEmail } from '../../utils/sendEmail';
 import { Types } from 'mongoose';
+import QueryBuilder from '../../builder/QueryBuilder';
 
 const registerUserIntoDB = async (payload: IUser) => {
   const user = await User.isUserExistsByEmail(payload.email);
@@ -349,6 +350,163 @@ const resetPassword = async (
   );
 };
 
+const getRecommendProfilesFromDB = async (
+  payload: JwtPayload,
+  query: Record<string, unknown>,
+) => {
+  // checking if the user is exist
+  const user = await User.isUserExistsByEmail(payload.email);
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is not found!');
+  }
+
+  // checking if the user is already deleted
+  const isDeleted = user?.isDeleted;
+
+  if (isDeleted) {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted!');
+  }
+
+  const isBlocked = user?.isBlocked;
+
+  if (isBlocked) {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked!');
+  }
+
+  const RecommendedQuery = new QueryBuilder(
+    User.find({
+      // Example: People you are not already following
+      _id: { $ne: user._id, $nin: user.following },
+      role: 'user',
+    }),
+    query,
+  )
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await RecommendedQuery.modelQuery;
+  const meta = await RecommendedQuery.countTotal();
+
+  // checking if there is any cars
+  if (result.length === 0) {
+    throw new AppError(httpStatus.NOT_FOUND, 'No Data Found');
+  }
+  return { result, meta };
+};
+
+const getFollowingProfilesFromDB = async (
+  payload: JwtPayload,
+  query: Record<string, unknown>,
+) => {
+  // checking if the user is exist
+  const user = await User.isUserExistsByEmail(payload.email);
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is not found!');
+  }
+
+  // checking if the user is already deleted
+  const isDeleted = user?.isDeleted;
+
+  if (isDeleted) {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted!');
+  }
+
+  const isBlocked = user?.isBlocked;
+
+  if (isBlocked) {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked!');
+  }
+
+  const FollowingQuery = new QueryBuilder(
+    User.find({
+      // Example: People you are not already following
+      _id: { $in: user.following },
+      role: 'user',
+    }),
+    query,
+  )
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await FollowingQuery.modelQuery;
+  const meta = await FollowingQuery.countTotal();
+
+  // checking if there is any cars
+  if (result.length === 0) {
+    throw new AppError(httpStatus.NOT_FOUND, 'No Data Found');
+  }
+  return { result, meta };
+};
+
+const getFollowersProfilesFromDB = async (
+  payload: JwtPayload,
+  query: Record<string, unknown>,
+) => {
+  // checking if the user is exist
+  const user = await User.isUserExistsByEmail(payload.email);
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is not found!');
+  }
+
+  // checking if the user is already deleted
+  const isDeleted = user?.isDeleted;
+
+  if (isDeleted) {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is deleted!');
+  }
+
+  const isBlocked = user?.isBlocked;
+
+  if (isBlocked) {
+    throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked!');
+  }
+
+  const following = user.following;
+
+  const FollowingQuery = new QueryBuilder(
+    User.find({
+      // Example: People you are not already following
+      _id: { $in: user.followers },
+      role: 'user',
+    }),
+    query,
+  )
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await FollowingQuery.modelQuery;
+  const meta = await FollowingQuery.countTotal();
+
+  // checking if there is any cars
+  if (result.length === 0) {
+    throw new AppError(httpStatus.NOT_FOUND, 'No Data Found');
+  }
+
+  const enhancedResult = result.map(follower => {
+    const followedBack =
+      follower._id && following!.some(id => id.equals(follower._id));
+
+    return {
+      _id: follower._id,
+      name: follower.name,
+      email: follower.email,
+      profileImg: follower.profileImg,
+      followedBack: Boolean(followedBack), // Add the followedBack field (true/false)
+    };
+  });
+
+  return { result:enhancedResult, meta };
+};
+
 export const AuthServices = {
   registerUserIntoDB,
   signInUserFromDB,
@@ -361,4 +519,7 @@ export const AuthServices = {
   createAdminIntoDB,
   forgetPassword,
   resetPassword,
+  getRecommendProfilesFromDB,
+  getFollowingProfilesFromDB,
+  getFollowersProfilesFromDB,
 };

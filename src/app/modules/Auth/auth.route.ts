@@ -41,6 +41,18 @@ router
   );
 
 router
+  .route('/recommended')
+  .get(auth(USER_ROLE.user), AuthControllers.getRecommendProfiles);
+
+router
+  .route('/following')
+  .get(auth(USER_ROLE.user), AuthControllers.getFollowingProfiles);
+
+router
+  .route('/followers')
+  .get(auth(USER_ROLE.user), AuthControllers.getFollowersProfiles);
+
+router
   .route('/users/:id')
   .get(auth(USER_ROLE.admin), AuthControllers.getSingleUser)
   .put(

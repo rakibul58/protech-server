@@ -20,6 +20,7 @@ export interface IUser {
   profileImg?: string;
   followers?: Types.ObjectId[];
   following?: Types.ObjectId[];
+  comments?: Types.ObjectId[];
 }
 
 // User Static Model

@@ -16,4 +16,11 @@ router
     PostControllers.createPost,
   );
 
+router
+  .route('/:id/upvote')
+  .post(auth(USER_ROLE.user), PostControllers.upVotePost);
+router
+  .route('/:id/downvote')
+  .post(auth(USER_ROLE.user), PostControllers.downVotePost);
+
 export const PostRoutes = router;

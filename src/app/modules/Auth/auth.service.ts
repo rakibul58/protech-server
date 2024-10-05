@@ -29,6 +29,8 @@ const registerUserIntoDB = async (payload: IUser) => {
     email: payload.email,
     role: USER_ROLE.user,
     profileImg: userData.profileImg,
+    name: userData.name,
+    isVerified: userData.isVerified,
   };
 
   // creating token
@@ -38,6 +40,8 @@ const registerUserIntoDB = async (payload: IUser) => {
       role: string;
       email: string;
       profileImg: string;
+      name: string;
+      isVerified: boolean;
     },
     config.jwt_access_secret as string,
     config.jwt_access_expires_in as string,
@@ -49,6 +53,8 @@ const registerUserIntoDB = async (payload: IUser) => {
       role: string;
       email: string;
       profileImg: string;
+      name: string;
+      isVerified: boolean;
     },
     config.jwt_refresh_secret as string,
     config.jwt_refresh_expires_in as string,
@@ -93,6 +99,8 @@ const signInUserFromDB = async (payload: ISignInUser) => {
     email: user.email,
     role: user.role,
     profileImg: user.profileImg,
+    name: user.name,
+    isVerified: user.isVerified,
   };
 
   // creating token
@@ -102,6 +110,8 @@ const signInUserFromDB = async (payload: ISignInUser) => {
       role: string;
       email: string;
       profileImg: string;
+      name: string;
+      isVerified: boolean;
     },
     config.jwt_access_secret as string,
     config.jwt_access_expires_in as string,
@@ -113,6 +123,8 @@ const signInUserFromDB = async (payload: ISignInUser) => {
       role: string;
       email: string;
       profileImg: string;
+      name: string;
+      isVerified: boolean;
     },
     config.jwt_refresh_secret as string,
     config.jwt_refresh_expires_in as string,
@@ -162,6 +174,8 @@ const refreshToken = async (token: string) => {
     email: user.email,
     role: user.role,
     profileImg: user.profileImg,
+    name: user.name,
+    isVerified: user.isVerified,
   };
 
   const accessToken = createToken(
@@ -170,6 +184,8 @@ const refreshToken = async (token: string) => {
       role: string;
       email: string;
       profileImg: string;
+      name: string;
+      isVerified: boolean;
     },
     config.jwt_access_secret as string,
     config.jwt_access_expires_in as string,
@@ -274,6 +290,8 @@ const forgetPassword = async (email: string) => {
     email: userData.email,
     role: userData.role,
     profileImg: userData.profileImg,
+    name: userData.name,
+    isVerified: userData.isVerified,
   };
 
   const resetToken = createToken(
@@ -282,6 +300,8 @@ const forgetPassword = async (email: string) => {
       role: string;
       email: string;
       profileImg: string;
+      name: string;
+      isVerified: boolean;
     },
     config.jwt_access_secret as string,
     '10m',
@@ -504,7 +524,7 @@ const getFollowersProfilesFromDB = async (
     };
   });
 
-  return { result:enhancedResult, meta };
+  return { result: enhancedResult, meta };
 };
 
 export const AuthServices = {

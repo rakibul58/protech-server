@@ -4,7 +4,7 @@ import sendResponse from '../../utils/sendResponse';
 import { CommentService } from './comment.service';
 
 const CreateComment = catchAsync(async (req, res) => {
-  const result = await CommentService.createCommentInDB(req.body , req.user);
+  const result = await CommentService.createCommentInDB(req.body, req.user);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -15,7 +15,10 @@ const CreateComment = catchAsync(async (req, res) => {
 });
 
 const getAllComment = catchAsync(async (req, res) => {
-  const result = await CommentService.getCommentFromDB(req.query);
+  const result = await CommentService.getCommentFromDB(
+    req.query,
+    req.params.postId,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -26,7 +29,11 @@ const getAllComment = catchAsync(async (req, res) => {
 });
 
 const updateComment = catchAsync(async (req, res) => {
-  const result = await CommentService.updateCommentInDB();
+  const result = await CommentService.updateCommentInDB(
+    req.user,
+    req.params.id,
+    req.body,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -37,7 +44,10 @@ const updateComment = catchAsync(async (req, res) => {
 });
 
 const deleteComment = catchAsync(async (req, res) => {
-  const result = await CommentService.deleteCommentInDB();
+  const result = await CommentService.deleteCommentInDB(
+    req.user,
+    req.params.id,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

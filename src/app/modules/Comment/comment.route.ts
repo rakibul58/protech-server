@@ -8,8 +8,11 @@ import { CommentValidation } from './comment.validation';
 const router = express.Router();
 
 router
+  .route('/post/:postId')
+  .get(auth(USER_ROLE.user, USER_ROLE.admin), CommentController.getAllComment);
+
+router
   .route('/')
-  .get(auth(USER_ROLE.user, USER_ROLE.admin), CommentController.getAllComment)
   .post(
     auth(USER_ROLE.user, USER_ROLE.admin),
     validateRequest(CommentValidation.createUpdateCommentSchema),

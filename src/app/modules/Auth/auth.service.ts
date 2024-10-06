@@ -443,10 +443,6 @@ const getRecommendProfilesFromDB = async (
   const result = await RecommendedQuery.modelQuery;
   const meta = await RecommendedQuery.countTotal();
 
-  // checking if there is any cars
-  if (result.length === 0) {
-    throw new AppError(httpStatus.NOT_FOUND, 'No Data Found');
-  }
   return { result, meta };
 };
 
@@ -490,10 +486,6 @@ const getFollowingProfilesFromDB = async (
   const result = await FollowingQuery.modelQuery;
   const meta = await FollowingQuery.countTotal();
 
-  // checking if there is any cars
-  if (result.length === 0) {
-    throw new AppError(httpStatus.NOT_FOUND, 'No Data Found');
-  }
   return { result, meta };
 };
 
@@ -538,11 +530,6 @@ const getFollowersProfilesFromDB = async (
 
   const result = await FollowingQuery.modelQuery;
   const meta = await FollowingQuery.countTotal();
-
-  // checking if there is any cars
-  if (result.length === 0) {
-    throw new AppError(httpStatus.NOT_FOUND, 'No Data Found');
-  }
 
   const enhancedResult = result.map(follower => {
     const followedBack =
@@ -627,6 +614,57 @@ const verifyPaymentInDB = async (query: Record<string, unknown>) => {
   return template;
 };
 
+const followUserInDB = async (user: JwtPayload, id: string) => {
+  const userData = await User.findById(user._id);
+  const userToFollow = await User.findById(id);
+
+  if (!userData || !userToFollow) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User/UserToFollow not found!');
+  }
+
+  const userToFollowObjectId = new Types.ObjectId(userToFollow._id);
+  const userObjectId = new Types.ObjectId(userData._id);
+
+  let result;
+
+  if (
+    !(userData.following as Types.ObjectId[]).includes(userToFollowObjectId)
+  ) {
+    (userData.following as Types.ObjectId[]).push(userToFollowObjectId);
+    (userToFollow.followers as Types.ObjectId[]).push(userObjectId);
+
+    result = await userData.save();
+    await userToFollow.save();
+  }
+
+  return result;
+};
+
+const unFollowUserInDB = async (user: JwtPayload, id: string) => {
+  const userData = await User.findById(user._id);
+  const userToUnFollow = await User.findById(id);
+
+  if (!userData || !userToUnFollow) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User/UserToUnFollow not found!');
+  }
+
+  const userToUnFollowObjectId = new Types.ObjectId(userToUnFollow._id);
+  const userObjectId = new Types.ObjectId(userData._id);
+
+  userData.following = (userData.following as Types.ObjectId[]).filter(
+    followerId => !followerId.equals(userToUnFollowObjectId),
+  );
+
+  userToUnFollow.followers = (
+    userToUnFollow.followers as Types.ObjectId[]
+  ).filter(followerId => !followerId.equals(userObjectId));
+
+  const result = await userData.save();
+  await userToUnFollow.save();
+
+  return result;
+};
+
 export const AuthServices = {
   registerUserIntoDB,
   signInUserFromDB,
@@ -644,4 +682,6 @@ export const AuthServices = {
   getFollowersProfilesFromDB,
   initiatePaymentInDB,
   verifyPaymentInDB,
+  unFollowUserInDB,
+  followUserInDB,
 };

@@ -83,4 +83,16 @@ router.post(
 
 router.post('/verify-payment', AuthControllers.verifyPayment);
 
+router.post(
+  '/follow/user/:userId',
+  auth(USER_ROLE.user),
+  AuthControllers.followUser,
+);
+
+router.post(
+  '/unFollow/user/:userId',
+  auth(USER_ROLE.user),
+  AuthControllers.unFollowUser,
+);
+
 export const AuthRoutes = router;

@@ -203,6 +203,31 @@ const verifyPayment = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+const followUser = catchAsync(async (req, res) => {
+  const result = await AuthServices.followUserInDB(req.user, req.params.userId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User Followed successfully!',
+    data: result,
+  });
+});
+
+const unFollowUser = catchAsync(async (req, res) => {
+  const result = await AuthServices.unFollowUserInDB(
+    req.user,
+    req.params.userId,
+  );
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User UnFollowed successfully!',
+    data: result,
+  });
+});
+
 export const AuthControllers = {
   signupUser,
   signInUser,
@@ -220,4 +245,6 @@ export const AuthControllers = {
   getFollowersProfiles,
   initiatePayment,
   verifyPayment,
+  followUser,
+  unFollowUser,
 };

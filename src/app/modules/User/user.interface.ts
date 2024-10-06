@@ -4,7 +4,7 @@ import { USER_ROLE } from './user.constant';
 /* eslint-disable no-unused-vars */
 
 // User Interface
-export interface IUser {
+export interface IUser extends Document {
   _id?: Types.ObjectId | string;
   name: string;
   email: string;
@@ -15,6 +15,7 @@ export interface IUser {
   isDeleted: boolean;
   preferences?: string;
   isVerified?: boolean;
+  verifiedUntil?: Date | null;
   isBlocked?: boolean;
   passwordChangedAt?: Date;
   profileImg?: string;

@@ -47,11 +47,12 @@ const userSchema = new Schema<IUser, UserModel>(
     },
     isVerified: {
       type: Boolean,
-      default: false, // New field added
+      default: false,
     },
+    verifiedUntil: { type: Date },
     isBlocked: {
       type: Boolean,
-      default: false, // New field added
+      default: false,
     },
     profileImg: {
       type: String,

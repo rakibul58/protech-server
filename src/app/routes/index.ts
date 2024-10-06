@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { AuthRoutes } from '../modules/Auth/auth.route';
 import { PostRoutes } from '../modules/Post/post.route';
 import { CommentRoutes } from '../modules/Comment/comment.route';
-import { BookingRoutes } from '../modules/Booking/booking.route';
+import { ActivityLogRoutes } from '../modules/ActivityLogs/activitylogs.route';
 
 const router = Router();
 
@@ -21,8 +21,8 @@ const moduleRoutes = [
     route: CommentRoutes,
   },
   {
-    path: '/bookings',
-    route: BookingRoutes,
+    path: '/activity-logs',
+    route: ActivityLogRoutes,
   },
 ];
 

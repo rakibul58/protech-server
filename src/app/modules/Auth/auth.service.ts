@@ -10,6 +10,7 @@ import { USER_ROLE } from '../User/user.constant';
 import { sendEmail } from '../../utils/sendEmail';
 import { Types } from 'mongoose';
 import QueryBuilder from '../../builder/QueryBuilder';
+import { ActivityLog } from '../ActivityLogs/activitylogs.model';
 
 const registerUserIntoDB = async (payload: IUser) => {
   const user = await User.isUserExistsByEmail(payload.email);
@@ -94,13 +95,28 @@ const signInUserFromDB = async (payload: ISignInUser) => {
   )
     throw new AppError(httpStatus.FORBIDDEN, 'Password do not matched');
 
+  const userData = await User.findById(user._id);
+
+  if (!userData) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User does not exists');
+  }
+
+  if (userData.isVerified && userData.verifiedUntil) {
+    const currentDate = new Date();
+    if (currentDate > userData.verifiedUntil) {
+      userData.isVerified = false;
+      userData.verifiedUntil = null;
+      await userData.save();
+    }
+  }
+
   const jwtPayload = {
-    _id: user._id,
-    email: user.email,
-    role: user.role,
-    profileImg: user.profileImg,
-    name: user.name,
-    isVerified: user.isVerified,
+    _id: userData._id,
+    email: userData.email,
+    role: userData.role,
+    profileImg: userData.profileImg,
+    name: userData.name,
+    isVerified: userData.isVerified,
   };
 
   // creating token
@@ -129,6 +145,12 @@ const signInUserFromDB = async (payload: ISignInUser) => {
     config.jwt_refresh_secret as string,
     config.jwt_refresh_expires_in as string,
   );
+
+  const activity = new ActivityLog({
+    user: userData._id,
+    action: 'Login',
+  });
+  await activity.save();
 
   return {
     accessToken,

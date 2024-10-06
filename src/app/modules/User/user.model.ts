@@ -88,6 +88,10 @@ userSchema.pre('save', async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this;
 
+  if (!user.isModified('password')) {
+    return next();
+  }
+
   user.password = await bcrypt.hash(
     user.password as string,
     Number(config.bcrypt_salt_rounds),

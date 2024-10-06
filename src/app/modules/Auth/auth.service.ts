@@ -1,16 +1,27 @@
+/* eslint-disable no-undef */
 import bcrypt from 'bcrypt';
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { ISignInUser, IUser } from '../User/user.interface';
 import { User } from '../User/user.model';
 import config from '../../config';
-import { createToken, verifyToken } from './auth.utils';
+import {
+  createToken,
+  generateTransactionId,
+  initiatePayment,
+  verifyPayment,
+  verifyToken,
+} from './auth.utils';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { USER_ROLE } from '../User/user.constant';
 import { sendEmail } from '../../utils/sendEmail';
 import { Types } from 'mongoose';
 import QueryBuilder from '../../builder/QueryBuilder';
 import { ActivityLog } from '../ActivityLogs/activitylogs.model';
+import { Payment } from '../Payment/payment.model';
+import { IPayment } from '../Payment/payment.interface';
+import { join } from 'path';
+import { readFileSync } from 'fs';
 
 const registerUserIntoDB = async (payload: IUser) => {
   const user = await User.isUserExistsByEmail(payload.email);
@@ -549,6 +560,73 @@ const getFollowersProfilesFromDB = async (
   return { result: enhancedResult, meta };
 };
 
+const initiatePaymentInDB = async (user: JwtPayload) => {
+  const transactionId = generateTransactionId();
+  const data = await User.findById(user._id).select('phone address');
+
+  const payment = new Payment<IPayment>({
+    user: user._id,
+    status: 'Pending',
+    transactionId,
+  });
+
+  await payment.save();
+
+  const paymentData = {
+    transactionId,
+    totalPrice: 20,
+    customerName: user.name,
+    customerEmail: user.email,
+    customerPhone: data?.phone,
+    customerAddress: data?.address || '',
+  };
+
+  //payment
+  const paymentSession = await initiatePayment(paymentData);
+
+  return paymentSession;
+};
+
+const verifyPaymentInDB = async (query: Record<string, unknown>) => {
+  const verifyResponse = await verifyPayment(query.transactionId as string);
+  let filePath;
+
+  if (verifyResponse === 200 && query.status === 'success') {
+    const payment = await Payment.findOneAndUpdate(
+      { transactionId: query.transactionId },
+      {
+        status: 'Paid',
+      },
+      {
+        new: true,
+      },
+    );
+
+    const user = await User.findById(payment?.user);
+
+    if (!user) {
+      throw new AppError(httpStatus.NOT_FOUND, 'User does not exists!');
+    }
+
+    user.isVerified = true;
+    user.verifiedUntil = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+    await user.save();
+
+    filePath = join(__dirname, '../../views/payment-success.html');
+  } else {
+    filePath = join(__dirname, '../../views/payment-failure.html');
+  }
+
+  let template = readFileSync(filePath, 'utf-8');
+  template = template.replace(
+    '{{transactionId}}',
+    query.transactionId as string,
+  );
+  template = template.replace('{{name}}', query.customerName as string);
+
+  return template;
+};
+
 export const AuthServices = {
   registerUserIntoDB,
   signInUserFromDB,
@@ -564,4 +642,6 @@ export const AuthServices = {
   getRecommendProfilesFromDB,
   getFollowingProfilesFromDB,
   getFollowersProfilesFromDB,
+  initiatePaymentInDB,
+  verifyPaymentInDB,
 };

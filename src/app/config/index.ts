@@ -21,4 +21,5 @@ export default {
   sender_password: process.env.SENDER_APP_PASS,
   // reset_pass_ui_link: 'http://localhost:3000',
   reset_pass_ui_link: process.env.RESET_PASS_UI_LINK,
+  backend_url: process.env.BACKEND_URL,
 };

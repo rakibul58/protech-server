@@ -6,6 +6,7 @@ const paymentSchema = new Schema<IPayment>(
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     amount: { type: Number, default: 20 },
     transactionId: { type: String, required: true },
+    status: { type: String },
   },
   {
     timestamps: true,

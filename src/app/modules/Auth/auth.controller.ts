@@ -187,6 +187,22 @@ const getFollowersProfiles = catchAsync(async (req, res) => {
   });
 });
 
+const initiatePayment = catchAsync(async (req, res) => {
+  const result = await AuthServices.initiatePaymentInDB(req.user);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Payment Initiated successfully!',
+    data: result,
+  });
+});
+
+const verifyPayment = catchAsync(async (req, res) => {
+  const result = await AuthServices.verifyPaymentInDB(req.query);
+  res.send(result);
+});
+
 export const AuthControllers = {
   signupUser,
   signInUser,
@@ -202,4 +218,6 @@ export const AuthControllers = {
   getRecommendProfiles,
   getFollowingProfiles,
   getFollowersProfiles,
+  initiatePayment,
+  verifyPayment,
 };

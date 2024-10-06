@@ -75,4 +75,12 @@ router.post(
   AuthControllers.resetPassword,
 );
 
+router.post(
+  '/initiate-payment',
+  auth(USER_ROLE.user),
+  AuthControllers.initiatePayment,
+);
+
+router.post('/verify-payment', AuthControllers.verifyPayment);
+
 export const AuthRoutes = router;

@@ -5,7 +5,10 @@ import { ActivityLog } from './activitylogs.model';
 
 const getAllActivityLogsFromDB = async (query: Record<string, unknown>) => {
   const ActivityQuery = new QueryBuilder(
-    ActivityLog.find().populate('user', "_id name email role isVerified profileImg"),
+    ActivityLog.find().populate(
+      'user',
+      '_id name email role isVerified profileImg',
+    ),
     query,
   )
     .filter()
@@ -25,5 +28,5 @@ const getAllActivityLogsFromDB = async (query: Record<string, unknown>) => {
 };
 
 export const ActivityLogServices = {
-        getAllActivityLogsFromDB,
+  getAllActivityLogsFromDB,
 };

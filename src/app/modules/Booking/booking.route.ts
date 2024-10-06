@@ -5,8 +5,6 @@ import { BookingControllers } from './booking.controller';
 
 const router = express.Router();
 
-router
-  .route('/success')
-  .get(BookingControllers.PaymentBooking);
+router.route('/success').get(BookingControllers.PaymentBooking);
 
 export const BookingRoutes = router;

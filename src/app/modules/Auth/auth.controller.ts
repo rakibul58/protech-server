@@ -146,7 +146,10 @@ const resetPassword = catchAsync(async (req, res) => {
 });
 
 const getRecommendProfiles = catchAsync(async (req, res) => {
-  const result = await AuthServices.getRecommendProfilesFromDB(req.user , req.query);
+  const result = await AuthServices.getRecommendProfilesFromDB(
+    req.user,
+    req.query,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -157,7 +160,10 @@ const getRecommendProfiles = catchAsync(async (req, res) => {
 });
 
 const getFollowingProfiles = catchAsync(async (req, res) => {
-  const result = await AuthServices.getFollowingProfilesFromDB(req.user , req.query);
+  const result = await AuthServices.getFollowingProfilesFromDB(
+    req.user,
+    req.query,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -168,7 +174,10 @@ const getFollowingProfiles = catchAsync(async (req, res) => {
 });
 
 const getFollowersProfiles = catchAsync(async (req, res) => {
-  const result = await AuthServices.getFollowersProfilesFromDB(req.user , req.query);
+  const result = await AuthServices.getFollowersProfilesFromDB(
+    req.user,
+    req.query,
+  );
 
   sendResponse(res, {
     statusCode: httpStatus.OK,
@@ -192,5 +201,5 @@ export const AuthControllers = {
   resetPassword,
   getRecommendProfiles,
   getFollowingProfiles,
-  getFollowersProfiles
+  getFollowersProfiles,
 };

@@ -3,7 +3,14 @@ import { Types } from 'mongoose';
 
 // creating jwt token
 export const createToken = (
-  jwtPayload: { _id: Types.ObjectId, role: string; email: string, profileImg: string, name: string, isVerified: boolean },
+  jwtPayload: {
+    _id: Types.ObjectId;
+    role: string;
+    email: string;
+    profileImg: string;
+    name: string;
+    isVerified: boolean;
+  },
   secret: string,
   expiresIn: string,
 ) => {

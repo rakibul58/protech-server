@@ -11,7 +11,6 @@ import crypto from 'crypto';
 import { join } from 'path';
 import { readFileSync } from 'fs';
 
-
 const generateTransactionId = () => {
   return 'TXN-' + crypto.randomBytes(16).toString('hex');
 };
@@ -53,7 +52,7 @@ const paymentBookingIntoDB = async (bookingId: string) => {
   const filePath = join(__dirname, '../../views/payment-success.html');
   let template = readFileSync(filePath, 'utf-8');
   const transactionId = generateTransactionId();
-  const name = "Rakibul Hasan"
+  const name = 'Rakibul Hasan';
   template = template.replace('{{transactionId}}', transactionId);
   template = template.replace('{{name}}', name);
 

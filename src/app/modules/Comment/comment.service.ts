@@ -7,7 +7,10 @@ const createCommentInDB = async () => {};
 
 const getCommentFromDB = async (query: Record<string, unknown>) => {
   const CommentQuery = new QueryBuilder(
-    Comment.find({parent: null}).populate('author', '_id email name profileImg isVerified'),
+    Comment.find({ parent: null }).populate(
+      'author',
+      '_id email name profileImg isVerified',
+    ),
     query,
   )
     .search(['content'])

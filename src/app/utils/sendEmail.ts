@@ -23,7 +23,7 @@ export const sendEmail = async (to: string, html: string) => {
       html, // html body
     });
 
-    return result
+    return result;
   } catch (error) {
     throw new AppError(httpStatus.FORBIDDEN, 'Something went wrong');
   }

@@ -4,6 +4,7 @@ import AppError from '../../errors/AppError';
 import { IPost } from './post.interface';
 import { Post } from './post.model';
 import { Types } from 'mongoose';
+import { JwtPayload } from 'jsonwebtoken';
 
 const createPostInDB = async (payload: Partial<IPost>, author: string) => {
   const postData = await Post.create({ ...payload, author });
@@ -22,10 +23,6 @@ const getAllPostFromDB = async (query: Record<string, unknown>) => {
   const result = await PostQuery.modelQuery;
   const meta = await PostQuery.countTotal();
 
-  // checking if there is any cars
-  if (result.length === 0) {
-    throw new AppError(httpStatus.NOT_FOUND, 'No Data Found');
-  }
   return { result, meta };
 };
 
@@ -83,9 +80,35 @@ const downVotePostsInDB = async (postId: string, userId: string) => {
   }
 };
 
+const getMyPostFromDB = async (
+  user: JwtPayload,
+  query: Record<string, unknown>,
+) => {
+  const PostQuery = new QueryBuilder(
+    Post.find({ author: user._id }).populate('author'),
+    query,
+  )
+    .search(['content', 'categories'])
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await PostQuery.modelQuery;
+  const meta = await PostQuery.countTotal();
+
+  return { result, meta };
+};
+
+const getSinglePostFromDB = async (postId: string) => {
+  return await Post.findById(postId).populate('author');
+};
+
 export const PostServices = {
   createPostInDB,
   getAllPostFromDB,
   upVotePostsInDB,
   downVotePostsInDB,
+  getMyPostFromDB,
+  getSinglePostFromDB
 };

@@ -33,10 +33,9 @@ const createAdminValidationSchema = z.object({
     phone: z.string().optional().nullable().default(null),
     preferences: z.string().optional().nullable().default(null),
     address: z.string().optional().nullable().default(null),
-    isVerified: z.boolean().optional().default(true), // New field
-    isDeleted: z.boolean().optional().default(false), // Admins might want to mark users as deleted
-    isBlocked: z.boolean().optional().default(false), // Admins might want to mark users as deleted
-    followedProfiles: z.array(z.string()).optional(), // Optional field for profiles they follow
+    isVerified: z.boolean().optional().default(true),
+    isDeleted: z.boolean().optional().default(false), 
+    isBlocked: z.boolean().optional().default(false), 
   }),
 });
 
@@ -58,9 +57,8 @@ const updateUserValidation = z.object({
     phone: z.string().optional().nullable().default(null),
     address: z.string().optional().nullable().default(null),
     preferences: z.string().optional().nullable().default(null),
-    isDeleted: z.boolean().optional(), // New field
-    isVerified: z.boolean().optional(), // New field
-    followedProfiles: z.array(z.string()).optional(), // New field (assuming ObjectId as string)
+    isDeleted: z.boolean().optional(), 
+    isVerified: z.boolean().optional(), 
   }),
 });
 

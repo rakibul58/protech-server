@@ -8,6 +8,14 @@ import validateRequest from '../../middlewares/validateRequest';
 const router = express.Router();
 
 router
+  .route('/me')
+  .get(auth(USER_ROLE.user, USER_ROLE.admin), PostControllers.getMyPost);
+
+router
+  .route('/:id')
+  .get(auth(USER_ROLE.user, USER_ROLE.admin), PostControllers.getSinglePost);
+
+router
   .route('/')
   .get(auth(USER_ROLE.user, USER_ROLE.admin), PostControllers.getAllPosts)
   .post(

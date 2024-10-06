@@ -71,12 +71,6 @@ const userSchema = new Schema<IUser, UserModel>(
         ref: 'User',
       },
     ],
-    comments: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: 'Comment',
-      },
-    ],
   },
   {
     timestamps: true,

@@ -1,9 +1,36 @@
-import httpStatus from 'http-status';
+import { JwtPayload } from 'jsonwebtoken';
 import QueryBuilder from '../../builder/QueryBuilder';
+import { IComment } from './comment.interface';
 import { Comment } from './comment.model';
+import { Post } from '../Post/post.model';
 import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
+import { Types } from 'mongoose';
 
-const createCommentInDB = async () => {};
+const createCommentInDB = async (
+  payload: Partial<IComment>,
+  user: JwtPayload,
+) => {
+  // Check if post exists
+  const post = await Post.findById(payload.post);
+  if (!post) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Post not found');
+  }
+
+  // Create comment
+  const comment = new Comment({
+    content: payload.content,
+    post: payload.post,
+    author: user._id,
+    parent: payload.parent || null,
+  });
+
+  await comment.save();
+
+  // Add commentId to post
+  (post.comments as Types.ObjectId[]).push(comment._id);
+  await post.save();
+};
 
 const getCommentFromDB = async (query: Record<string, unknown>) => {
   const CommentQuery = new QueryBuilder(
@@ -22,10 +49,6 @@ const getCommentFromDB = async (query: Record<string, unknown>) => {
   const result = await CommentQuery.modelQuery;
   const meta = await CommentQuery.countTotal();
 
-  // checking if there is any cars
-  if (result.length === 0) {
-    throw new AppError(httpStatus.NOT_FOUND, 'No Data Found');
-  }
   return { result, meta };
 };
 

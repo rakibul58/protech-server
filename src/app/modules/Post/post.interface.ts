@@ -7,4 +7,5 @@ export interface IPost {
   isPremium?: boolean;
   upvotes?: Types.ObjectId[];
   downvotes?: Types.ObjectId[];
+  comments?: Types.ObjectId[];
 }

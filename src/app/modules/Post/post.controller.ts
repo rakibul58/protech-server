@@ -49,9 +49,31 @@ const downVotePost = catchAsync(async (req, res) => {
   });
 });
 
+const getMyPost = catchAsync(async (req, res) => {
+  const result = await PostServices.getMyPostFromDB(req.user, req.query);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Posts Fetched Successfully',
+    data: result,
+  });
+});
+
+const getSinglePost = catchAsync(async (req, res) => {
+  const result = await PostServices.getSinglePostFromDB(req.params.id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Posts Fetched Successfully',
+    data: result,
+  });
+});
+
 export const PostControllers = {
   createPost,
   getAllPosts,
   upVotePost,
   downVotePost,
+  getMyPost,
+  getSinglePost
 };

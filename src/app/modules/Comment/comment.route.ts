@@ -15,7 +15,7 @@ router
   .route('/')
   .post(
     auth(USER_ROLE.user, USER_ROLE.admin),
-    validateRequest(CommentValidation.createUpdateCommentSchema),
+    validateRequest(CommentValidation.createCommentSchema),
     CommentController.CreateComment,
   );
 
@@ -27,7 +27,7 @@ router
   )
   .put(
     auth(USER_ROLE.user, USER_ROLE.admin),
-    validateRequest(CommentValidation.createUpdateCommentSchema),
+    validateRequest(CommentValidation.updateCommentSchema),
     CommentController.updateComment,
   );
 

@@ -29,28 +29,41 @@ const createCommentInDB = async (
   await comment.save();
 
   // Add commentId to post
-  (post.comments as Types.ObjectId[]).push(comment._id);
-  await post.save();
+  if (comment.parent === null) {
+    (post.comments as Types.ObjectId[]).push(comment._id);
+  }
+  const result = await post.save();
+  return result;
 };
 
-const getCommentReplies = async (commentId: Types.ObjectId): Promise<IComment[]> => {
+const getCommentReplies = async (
+  commentId: Types.ObjectId,
+): Promise<IComment[]> => {
   const replies = await Comment.find({ parent: commentId })
     .populate('author', '_id email name profileImg isVerified')
-    .sort({ createdAt: -1 });
+    .sort({ createdAt: -1 })
+    .lean(); // Convert Mongoose documents to plain JavaScript objects
 
-  for (const reply of replies) {
-    reply.replies = await getCommentReplies(reply._id as Types.ObjectId); // Recursive call
-  }
+  const populatedReplies = await Promise.all(
+    replies.map(async reply => {
+      const nestedReplies = await getCommentReplies(
+        reply._id as Types.ObjectId,
+      );
+      return { ...reply, replies: nestedReplies }; // Add replies field to the plain object
+    }),
+  );
 
-  return replies;
+  return populatedReplies;
 };
 
-const getCommentFromDB = async (query: Record<string, unknown>, postId: string) => {
+const getCommentFromDB = async (
+  query: Record<string, unknown>,
+  postId: string,
+) => {
   const CommentQuery = new QueryBuilder(
-    Comment.find({ parent: null, post: postId }).populate(
-      'author',
-      '_id email name profileImg isVerified',
-    ),
+    Comment.find({ parent: null, post: postId })
+      .populate('author', '_id email name profileImg isVerified')
+      .lean(), // Convert Mongoose documents to plain JavaScript objects
     query,
   )
     .search(['content'])
@@ -62,13 +75,15 @@ const getCommentFromDB = async (query: Record<string, unknown>, postId: string) 
   const result = await CommentQuery.modelQuery;
   const meta = await CommentQuery.countTotal();
 
-  for (const comment of result) {
-    comment.replies = await getCommentReplies(comment._id as Types.ObjectId); // Fetch nested replies
-  }
+  const populatedComments = await Promise.all(
+    result.map(async comment => {
+      const replies = await getCommentReplies(comment._id as Types.ObjectId);
+      return { ...comment, replies }; // Add replies to each comment object
+    }),
+  );
 
-  return { result, meta };
+  return { result: populatedComments, meta };
 };
-
 
 const updateCommentInDB = async (
   user: JwtPayload,

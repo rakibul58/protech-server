@@ -8,4 +8,6 @@ export interface IPost {
   upvotes?: Types.ObjectId[];
   downvotes?: Types.ObjectId[];
   comments?: Types.ObjectId[];
+  upvoteCount?: number
+  downvoteCount?: number
 }

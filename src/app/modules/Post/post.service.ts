@@ -45,6 +45,8 @@ const upVotePostsInDB = async (postId: string, userId: string) => {
     post.downvotes = post.downvotes.filter((id: Types.ObjectId) => {
       return !id.equals(userObjectId);
     });
+    post.upvoteCount = post.upvotes.length;
+    post.downvoteCount = post.downvotes.length;
 
     await post.save();
     return { message: 'UpVoted successfully.' };
@@ -73,6 +75,8 @@ const downVotePostsInDB = async (postId: string, userId: string) => {
       return !id.equals(userObjectId);
     });
 
+    post.upvoteCount = post.upvotes.length;
+    post.downvoteCount = post.downvotes.length;
     await post.save();
     return { message: 'DownVoted successfully.' };
   } else {

@@ -28,12 +28,20 @@ const postSchema = new Schema<IPost>(
         ref: 'User',
       },
     ],
+    upvoteCount: {
+      type: Number,
+      default: 0,
+    },
     downvotes: [
       {
         type: Schema.Types.ObjectId,
         ref: 'User',
       },
     ],
+    downvoteCount: {
+      type: Number,
+      default: 0,
+    },
     comments: [
       {
         type: Schema.Types.ObjectId,

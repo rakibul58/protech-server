@@ -1,12 +1,11 @@
-<!-- # Protech
+# Protech
 
-## Car Rental Reservation System
+## Tips and Tricks Blog Site
 
-[Live URL](https://steer-away.vercel.app/)
+[Live URL](https://protech-server.vercel.app/)
 
 ### Table of Contents
 
-- [Project Overview](#project-overview)
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Usage Guide](#usage-guide)
@@ -14,16 +13,13 @@
 - [Credentials](#Credentials)
 - [Contact](#contact)
 
-## Project Overview
-
-SteerAway is a comprehensive car rental reservation system backend with features for booking and managing car rentals. Users can easily search for available cars, make booking, and admin can manage bookings and returns.
 
 ## Features
 
 - **User Authentication:** Secure sign-up and login functionality.
-- **Car Search and Filter:** Admin can filter bookings based on carId and date.
-- **Booking Management:** Users can view the cars, book it if available.
-- **Admin:** Manage cars, bookings.
+- **Post Search and Filter:** User can filter Posts.
+- **Post Management:** Users can view the posts, interact, upvote, comment and share.
+- **Admin:** Manage Post, Users.
 
 ## Technologies Used
 
@@ -45,7 +41,7 @@ Open command prompt(`cmd`) in folder where you want to add the project.
 Run the following command to clone the repository:
 
 ```
-git clone https://github.com/rakibul58/steerAway-batch-3-assignment-3.git
+git clone https://github.com/rakibul58/protech-server.git
 ```
 
 ### Step 3
@@ -53,7 +49,7 @@ git clone https://github.com/rakibul58/steerAway-batch-3-assignment-3.git
 Open the cloned folder or run the following in cmd:
 
 ```
-cd steerAway-batch-3-assignment-3
+cd protech-server
 ```
 
 ### Step 4
@@ -75,7 +71,16 @@ DATABASE_URL=
 BCRYPT_SALT_ROUNDS=
 JWT_ACCESS_SECRET=
 JWT_ACCESS_EXPIRES_IN=
+JWT_REFRESH_SECRET=
+JWT_REFRESH_EXPIRES_IN=
 DEFAULT_PASSWORD=
+BASE_URL=
+STORE_ID=
+SIGNATURE_KEY=
+SENDER_EMAIL=
+SENDER_APP_PASS=
+RESET_PASS_UI_LINK=
+BACKEND_URL=
 ```
 
 ### Step 6
@@ -83,7 +88,7 @@ DEFAULT_PASSWORD=
 Run the following code to start the development server:
 
 ```
-npm run start
+npm start
 ```
 
 Other commands can be found in package.json scripts
@@ -96,17 +101,17 @@ Once the application is set up and running, you can access it at http://localhos
 
 ### Admin Credentials
 
-- **Email:** admin@test.com
-- **Password:** admin123
+- **Email:** admin@protech.com
+- **Password:** 123
 
 ### User Credentials
 
-- **Email:** user@test.com
-- **Password:** user123
+- **Email:** student3@test.com
+- **Password:** 123
 
 ## Contact
 
 For any questions or feedback, please contact:
 
 - **Name:** Muhammed Rakibul Hasan
-- **Email:** rhrahi14@gmail.com -->
+- **Email:** rhrahi14@gmail.com

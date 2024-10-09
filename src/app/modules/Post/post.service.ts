@@ -108,11 +108,21 @@ const getSinglePostFromDB = async (postId: string) => {
   return await Post.findById(postId).populate('author');
 };
 
+const updatePostInDB = async (postId: string, payload: { content: string }) => {
+  return await Post.findByIdAndUpdate(postId, payload);
+};
+
+const deletePostInDB = async (postId: string) => {
+  return await Post.findByIdAndDelete(postId);
+};
+
 export const PostServices = {
   createPostInDB,
   getAllPostFromDB,
   upVotePostsInDB,
   downVotePostsInDB,
   getMyPostFromDB,
-  getSinglePostFromDB
+  getSinglePostFromDB,
+  updatePostInDB,
+  deletePostInDB,
 };

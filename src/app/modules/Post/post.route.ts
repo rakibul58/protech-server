@@ -13,7 +13,9 @@ router
 
 router
   .route('/:id')
-  .get(auth(USER_ROLE.user, USER_ROLE.admin), PostControllers.getSinglePost);
+  .get(auth(USER_ROLE.user, USER_ROLE.admin), PostControllers.getSinglePost)
+  .put(auth(USER_ROLE.user, USER_ROLE.admin), PostControllers.updatePost)
+  .delete(auth(USER_ROLE.user, USER_ROLE.admin), PostControllers.deletePost);
 
 router
   .route('/')

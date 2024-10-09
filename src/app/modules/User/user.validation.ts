@@ -54,11 +54,12 @@ const updateUserValidation = z.object({
       })
       .optional()
       .default('user'),
-    phone: z.string().optional().nullable().default(null),
-    address: z.string().optional().nullable().default(null),
-    preferences: z.string().optional().nullable().default(null),
+    phone: z.string().optional(),
+    address: z.string().optional(),
+    preferences: z.string().optional(),
     isDeleted: z.boolean().optional(), 
     isVerified: z.boolean().optional(), 
+    isBlocked: z.boolean().optional(), 
   }),
 });
 
@@ -71,9 +72,9 @@ const profileUpdateValidation = z.object({
       .trim()
       .email({ message: 'Please enter a valid email' })
       .optional(),
-    phone: z.string().optional().nullable().default(null),
-    address: z.string().optional().nullable().default(null),
-    preferences: z.string().optional().nullable().default(null),
+    phone: z.string().optional(),
+    address: z.string().optional(),
+    preferences: z.string().optional(),
   }),
 });
 

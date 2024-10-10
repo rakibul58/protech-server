@@ -1,6 +1,5 @@
-import httpStatus from 'http-status';
 import QueryBuilder from '../../builder/QueryBuilder';
-import AppError from '../../errors/AppError';
+import { Payment } from '../Payment/payment.model';
 import { ActivityLog } from './activitylogs.model';
 
 const getAllActivityLogsFromDB = async (query: Record<string, unknown>) => {
@@ -19,12 +18,22 @@ const getAllActivityLogsFromDB = async (query: Record<string, unknown>) => {
   const result = await ActivityQuery.modelQuery;
   const meta = await ActivityQuery.countTotal();
 
-  // checking if there is any cars
-  if (result.length === 0) {
-    throw new AppError(httpStatus.NOT_FOUND, 'No Data Found');
-  }
+  const PaymentQuery = new QueryBuilder(
+    Payment.find().populate(
+      'user',
+      '_id name email role isVerified profileImg',
+    ),
+    query,
+  )
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
 
-  return { result, meta };
+  const paymentResult = await PaymentQuery.modelQuery;
+  const PaymentMeta = await PaymentQuery.countTotal();
+
+  return { activitylogs: {result, meta} , payment: {result: paymentResult , meta: PaymentMeta} };
 };
 
 export const ActivityLogServices = {

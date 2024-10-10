@@ -280,8 +280,16 @@ const updateProfileInDB = async (user: JwtPayload, payload: Partial<IUser>) => {
 };
 
 const getAllUsersFromDB = async () => {
-  const result = await User.find();
-  return result;
+  const UserQuery = new QueryBuilder(User.find(), {})
+    .filter()
+    .sort()
+    .paginate()
+    .fields();
+
+  const result = await UserQuery.modelQuery;
+  const meta = await UserQuery.countTotal();
+
+  return { result, meta };
 };
 
 const getSingleUserFromDB = async (id: string) => {

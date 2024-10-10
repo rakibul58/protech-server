@@ -6,7 +6,13 @@ import { USER_ROLE } from '../User/user.constant';
 const router = express.Router();
 
 router
-  .route('/')
-  .get(auth(USER_ROLE.admin), ActivityLogControllers.GetAllActivityLogs);
+  .route('/login')
+  .get(auth(USER_ROLE.admin), ActivityLogControllers.getAllActivityLogs);
+router
+  .route('/payment')
+  .get(auth(USER_ROLE.admin), ActivityLogControllers.getAllPayments);
+router
+  .route('/monthly')
+  .get(auth(USER_ROLE.admin), ActivityLogControllers.getMonthlyAnalytics);
 
 export const ActivityLogRoutes = router;

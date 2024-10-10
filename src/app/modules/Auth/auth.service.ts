@@ -279,8 +279,8 @@ const updateProfileInDB = async (user: JwtPayload, payload: Partial<IUser>) => {
   return result;
 };
 
-const getAllUsersFromDB = async () => {
-  const UserQuery = new QueryBuilder(User.find(), {})
+const getAllUsersFromDB = async (query: Record<string, unknown>) => {
+  const UserQuery = new QueryBuilder(User.find(), query)
     .filter()
     .sort()
     .paginate()

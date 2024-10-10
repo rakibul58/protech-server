@@ -86,7 +86,7 @@ const updateProfileData = catchAsync(async (req, res) => {
 });
 
 const getAllUsers = catchAsync(async (req, res) => {
-  const result = await AuthServices.getAllUsersFromDB();
+  const result = await AuthServices.getAllUsersFromDB(req.query);
 
   sendResponse(res, {
     statusCode: httpStatus.OK,

@@ -78,11 +78,10 @@ const registerUserIntoDB = async (payload: IUser) => {
   };
 };
 
-const createAdminIntoDB = async (payload: IUser) => {
+const createAccountIntoDB = async (payload: IUser) => {
   const user = await User.isUserExistsByEmail(payload.email);
   // if there is no password field then adding a default password
   payload.password = payload.password || config.default_password;
-  payload.role = USER_ROLE.admin;
   if (user) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
@@ -682,7 +681,7 @@ export const AuthServices = {
   getAllUsersFromDB,
   getSingleUserFromDB,
   updateUserFromDB,
-  createAdminIntoDB,
+  createAccountIntoDB,
   forgetPassword,
   resetPassword,
   getRecommendProfilesFromDB,

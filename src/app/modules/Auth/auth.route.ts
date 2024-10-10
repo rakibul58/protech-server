@@ -12,10 +12,10 @@ router.route('/signup').post(
   AuthControllers.signupUser,
 );
 
-router.route('/create-admin').post(
+router.route('/create-account').post(
   auth(USER_ROLE.admin),
-  validateRequest(UserValidations.createAdminValidationSchema), // validating schema
-  AuthControllers.signupUser,
+  validateRequest(UserValidations.createUserValidationSchema), // validating schema
+  AuthControllers.createAccount,
 );
 
 router

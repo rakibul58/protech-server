@@ -19,7 +19,7 @@ const userRegisterValidationSchema = z.object({
 });
 
 //createAdminValidationSchema
-const createAdminValidationSchema = z.object({
+const createUserValidationSchema = z.object({
   body: z.object({
     name: z.string({ required_error: 'Name is required!' }).trim(),
     email: z
@@ -30,12 +30,13 @@ const createAdminValidationSchema = z.object({
       .string({ required_error: 'Password is required!' })
       .max(20, "Password can't be more than 20 characters!")
       .optional(),
+    role: z.string().optional().default('user'),
     phone: z.string().optional().nullable().default(null),
     preferences: z.string().optional().nullable().default(null),
     address: z.string().optional().nullable().default(null),
     isVerified: z.boolean().optional().default(true),
-    isDeleted: z.boolean().optional().default(false), 
-    isBlocked: z.boolean().optional().default(false), 
+    isDeleted: z.boolean().optional().default(false),
+    isBlocked: z.boolean().optional().default(false),
   }),
 });
 
@@ -57,9 +58,9 @@ const updateUserValidation = z.object({
     phone: z.string().optional(),
     address: z.string().optional(),
     preferences: z.string().optional(),
-    isDeleted: z.boolean().optional(), 
-    isVerified: z.boolean().optional(), 
-    isBlocked: z.boolean().optional(), 
+    isDeleted: z.boolean().optional(),
+    isVerified: z.boolean().optional(),
+    isBlocked: z.boolean().optional(),
   }),
 });
 
@@ -124,7 +125,7 @@ export const UserValidations = {
   refreshTokenValidationSchema,
   profileUpdateValidation,
   updateUserValidation,
-  createAdminValidationSchema,
+  createUserValidationSchema,
   forgetPasswordValidationSchema,
   resetPasswordValidationSchema,
 };

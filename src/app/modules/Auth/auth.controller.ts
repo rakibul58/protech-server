@@ -23,8 +23,8 @@ const signupUser = catchAsync(async (req, res) => {
   });
 });
 
-const createAdmin = catchAsync(async (req, res) => {
-  const result = await AuthServices.createAdminIntoDB(req.body);
+const createAccount = catchAsync(async (req, res) => {
+  const result = await AuthServices.createAccountIntoDB(req.body);
 
   sendResponse(res, {
     statusCode: httpStatus.CREATED,
@@ -237,7 +237,7 @@ export const AuthControllers = {
   getAllUsers,
   getSingleUser,
   updateUser,
-  createAdmin,
+  createAccount,
   forgetPassword,
   resetPassword,
   getRecommendProfiles,
